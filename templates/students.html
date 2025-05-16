@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block tle %}Student List{% endblock %}
+{% block content %}
+<div class="card p-4">
+    <h3 class="text-center mb-4">Student List</h3>
+    <div id="studentTableContainer">Loading...</div>
+</div>
+<script>
+fetch('/api/students')
+    .then(res => res.json())
+    .then(data => {
+        let html = `<table class="table table-striped">
+            <thead class="table-dark"><tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Action</th></tr></thead><tbody>`;
+        data.forEach(s => {
+            html += `<tr>
+                <td>${s.id}</td>
+                <td>${s.name}</td>
+                <td>${s.email}</td>
+                <td>${s.department}</td>
+                <td>
+                    <a href="/delete_student/${s.id}" class="btn btn-danger btn-sm" onclick="return confirm('Delete student?')">Delete</a>
+                </td>
+            </tr>`;
+        });
+        html += '</tbody></table>';
+        document.getElementById('studentTableContainer').innerHTML = html;
+    });
+</script>
+{% endblock %}
+
+
+

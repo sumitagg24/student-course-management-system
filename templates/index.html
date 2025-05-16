@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block tle %}Dashboard{% endblock %}
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+        <div class="card text-center p-4">
+            <h3>Total Students</h3>
+            <h1 class="display-4">{{ total_students }}</h1>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5 class="text-center">Students by Department (Pie)</h5>
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5 class="text-center">Students per Department (Bar)</h5>
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const labels = {{ labels | tojson }};
+    const data = {{ counts | tojson }};
+
+    const pieColors = [
+  '#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f',
+  '#edc949', '#af7aa1', '#ff9da7', '#9c755f', '#bab0ab',
+  '#00a8cc', '#ff6f61', '#c1d37f', '#6b5b95', '#b565a7'
+];
+
+new Chart(document.getElementById('pieChart'), {
+    type: 'pie',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Students',
+            data: data,
+            backgroundColor: pieColors.slice(0, labels.length)
+        }]
+    }
+});
+
+
+    new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Student Count',
+                data: data,
+                backgroundColor: '#4e79a7'
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+{% endblock %}
